@@ -4,6 +4,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 
+
 class AlienInvasion:
     """Класс для управления ресурсами и поведениями игры."""
 
@@ -28,22 +29,29 @@ class AlienInvasion:
             self.ship.update()
             self._update_screen()
 
-
     def _check_events(self):
         # Отслеживание событий клавиатуры и мыши
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    self.ship.moving_right = True
-                elif event.key == pygame.K_LEFT:
-                    self.ship.moving_left = True
+                self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    self.ship.moving_right = False
-                elif event.key == pygame.K_LEFT:
-                    self.ship.moving_left = False
+                self._check_keyup_events(event)
+
+    def _check_keydown_events(self, event):
+        """Реагирует на нажатие клавиш"""
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = True
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = True
+
+    def _check_keyup_events(self, event):
+        """Реагирует на отпускание клавиш"""
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = False
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = False
 
     def _update_screen(self):
         # Обновляет изображнеия на экране и отображает новый экран
@@ -51,6 +59,7 @@ class AlienInvasion:
         self.ship.blitme()
 
         pygame.display.flip()
+
 
 if __name__ == '__main__':
     # Создание экземпляра и запуск игры
