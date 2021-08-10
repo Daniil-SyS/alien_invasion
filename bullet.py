@@ -19,6 +19,7 @@ class Bullet(Sprite):
         self.y = float(self.rect.y)
 
     def update(self):
+        """Перемещает снаряд вверх по экрану"""
         # Обновление позиции снаряда в вещественном формате
         self.y -= self.settings.bullet_speed
 
