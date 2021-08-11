@@ -17,3 +17,6 @@ class Settings:
         self.bullet_height = 15
         self.color = (60, 60, 60)
         self.bullets_allowed = 3
+
+        # Параметры прешельца
+        self.alien_speed = 1.0
