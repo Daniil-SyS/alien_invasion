@@ -86,20 +86,26 @@ class AlienInvasion:
         # Создание  прешельца и вычисление количества пришельцов в ряду
         # Интервал между пришельцами равено одному прешельцу
         alien = Alien(self)
-        alien_width = alien.rect.width
+        alien_width, alien_height = alien.rect.size
         available_space_x = self.settings.screen_width - (2 * alien_width)
         number_aliens_x = available_space_x // (2 * alien_width)
 
-        # Создание первого ряда прешелцев
-        for alien_number in range(number_aliens_x):
-            self._create_alien(alien_number)
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        number_aliens_y = available_space_y // (2 * alien_height)
 
-    def _create_alien(self, alien_number):
+        # Создание первого ряда прешелцев
+        for alien_row_number in range(number_aliens_y):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number, alien_row_number)
+
+    def _create_alien(self, alien_number, alien_row_number):
         """Создание прешельца и размещение его в ряду"""
         alien = Alien(self)
         alien_width = alien.rect.width
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * alien_row_number
         self.aliens.add(alien)
 
     def _update_screen(self):
