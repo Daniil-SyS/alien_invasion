@@ -94,6 +94,11 @@ class AlienInvasion:
         # При попадании удаляет прешельца и снаряд
         collections = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
+        if not self.aliens:
+            # Удаляет все снаряды и создает новый флот прешельцев
+            self.bullets.empty()
+            self._create_fleet()
+
     def _update_aliens(self):
         """
         Проверяет, достиг ли флот края экрана
