@@ -20,7 +20,7 @@ class Settings:
         self.bullets_allowed = 3
 
         # Параметры прешельца
-        self.alien_speed = 5
+        self.alien_speed = 1.5
         self.fleet_drop_speed = 10
         #fleet_direction = 1 обозначает движение вправо, а -1 влево
         self.fleet_direction = 1
