@@ -66,7 +66,18 @@ class AlienInvasion:
     def _check_play_button(self, mouse_get):
         """Запускает новую игру при нажатии на кнопку Play"""
         if self.button_play.rect.collidepoint(mouse_get):
+            # Сброс игровой статистики
+            self.stats.reset_stats()
             self.stats.game_active = True
+
+            # Очистка списков с прешельцами и снарядами
+            self.aliens.empty()
+            self.bullets.empty()
+
+            # Создание нового флота и размещение корабля на исходной позиции
+            self._create_fleet()
+            self.ship.center_ship()
+
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш"""
