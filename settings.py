@@ -25,5 +25,3 @@ class Settings:
         #fleet_direction = 1 обозначает движение вправо, а -1 влево
         self.fleet_direction = 1
 
-        # Игра Alien Invasion запускается в активном состоянии
-        self.game_active = True

@@ -7,6 +7,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from time import sleep
+from button import Button
 
 
 class AlienInvasion:
@@ -31,6 +32,9 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
 
+        # Создание кнопки play
+        self.button_play = Button(self, "Play")
+
         # Назначение цвета фона
         self.bg_color = (230, 230, 230)
 
@@ -39,7 +43,7 @@ class AlienInvasion:
         while True:
             self._check_events()
 
-            if self.settings.game_active:
+            if self.stats.game_active:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
@@ -146,7 +150,6 @@ class AlienInvasion:
         else:
             self.settings.game_active = False
 
-
     def _create_fleet(self):
         """Создание флота прешельцев"""
         # Создание  прешельца и вычисление количества пришельцов в ряду
@@ -196,6 +199,10 @@ class AlienInvasion:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)
+
+        # Кнопка Play отображается в том случае если игра - не активна
+        if not self.stats.game_active:
+            self.button_play.draw_button()
 
         pygame.display.flip()
 
