@@ -59,6 +59,14 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_get = pygame.mouse.get_pos()
+                self._check_play_button(mouse_get)
+
+    def _check_play_button(self, mouse_get):
+        """Запускает новую игру при нажатии на кнопку Play"""
+        if self.button_play.rect.collidepoint(mouse_get):
+            self.stats.game_active = True
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш"""
@@ -148,7 +156,7 @@ class AlienInvasion:
             sleep(0.5)
 
         else:
-            self.settings.game_active = False
+            self.stats.game_active = False
 
     def _create_fleet(self):
         """Создание флота прешельцев"""
