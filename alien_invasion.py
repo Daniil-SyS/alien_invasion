@@ -83,6 +83,9 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.center_ship()
 
+        # Сброс игровых настроек
+        self.settings.initialize_dynamic_settings()
+
         # Указатель мыши скрывается
         pygame.mouse.set_visible(False)
 
@@ -133,6 +136,7 @@ class AlienInvasion:
             # Удаляет все снаряды и создает новый флот прешельцев
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _update_aliens(self):
         """
