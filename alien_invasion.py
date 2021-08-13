@@ -30,10 +30,11 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.buttons = []
         self._create_fleet()
 
-        # Создание кнопки play
-        self.button_play = Button(self, "Play")
+        # Создание кнопок play, easy, middle, hard
+        self.buttons_level()
 
         # Назначение цвета фона
         self.bg_color = (230, 230, 230)
@@ -61,13 +62,20 @@ class AlienInvasion:
                 self._check_keyup_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_get = pygame.mouse.get_pos()
-                self._check_play_button(mouse_get)
+                self._check_click_button(mouse_get)
 
-    def _check_play_button(self, mouse_get):
-        """Запускает новую игру при нажатии на кнопку Play"""
-        button_click = self.button_play.rect.collidepoint(mouse_get)
-        if button_click and not self.stats.game_active:
+    def _check_click_button(self, mouse_get):
+        """Обработка событий при нажатии на кнопку"""
+        # Запускает игру
+        if self.buttons[0].rect.collidepoint(mouse_get)  and not self.stats.game_active:
             self.start_game()
+        # Выставляет уровни сложности
+        elif self.buttons[1].rect.collidepoint(mouse_get)  and not self.stats.game_active:
+            self.settings.speedup_scale = 1.1
+        elif self.buttons[2].rect.collidepoint(mouse_get)  and not self.stats.game_active:
+            self.settings.speedup_scale = 1.2
+        elif self.buttons[3].rect.collidepoint(mouse_get)  and not self.stats.game_active:
+            self.settings.speedup_scale = 1.3
 
     def start_game(self):
         """Задает исходный сценарий при запуске игры"""
@@ -88,6 +96,24 @@ class AlienInvasion:
 
         # Указатель мыши скрывается
         pygame.mouse.set_visible(False)
+
+    def buttons_level(self):
+        """Создает кнопки для игрового меню"""
+        button_play = Button(self, "Play", self.screen.get_rect().center)
+        self.buttons.append(button_play)
+
+        # Размещается чуть ниже предыдущей кнопки на расстоянии высоты кнопки
+        position_button_easy = (button_play.rect.centerx, button_play.rect.y + button_play.rect.height * 2)
+        button_easy = Button(self, "Easy", position_button_easy)
+        self.buttons.append(button_easy)
+
+        position_button_middle = (button_easy.rect.centerx, button_easy.rect.y + button_easy.rect.height * 2)
+        button_middle = Button(self, "Middle", position_button_middle)
+        self.buttons.append(button_middle)
+
+        position_button_hard = (button_middle.rect.centerx, button_middle.rect.y + button_middle.rect.height * 2)
+        button_hard = Button(self, "Hard", position_button_hard)
+        self.buttons.append(button_hard)
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш"""
@@ -235,7 +261,8 @@ class AlienInvasion:
 
         # Кнопка Play отображается в том случае если игра - не активна
         if not self.stats.game_active:
-            self.button_play.draw_button()
+            for button in self.buttons:
+                button.draw_button()
 
         pygame.display.flip()
 
