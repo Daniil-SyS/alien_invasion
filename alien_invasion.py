@@ -8,6 +8,7 @@ from alien import Alien
 from game_stats import GameStats
 from time import sleep
 from button import Button
+from scoreboard import Scoreboard
 
 
 class AlienInvasion:
@@ -25,7 +26,9 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         # Создание экземпляра для хранения игровой статистики
+        # и панели результатов
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -258,6 +261,9 @@ class AlienInvasion:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)
+
+        # Вывод информации о счете
+        self.sb.show_score()
 
         # Кнопка Play отображается в том случае если игра - не активна
         if not self.stats.game_active:
