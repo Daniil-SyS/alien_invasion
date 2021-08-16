@@ -34,6 +34,7 @@ class Scoreboard():
         """Преобразует текущий счет в графическое изображение"""
         rounded_score = round(self.stats.score, -1)
         score_str = "{:,}".format(rounded_score)
+        score_str = f"Score: {score_str}"
         self.score_image = self.font.render(score_str, True, self.text_color, self.settings.bg_color)
 
         # Вывод счета в правой верхней части экрана
@@ -45,6 +46,7 @@ class Scoreboard():
         """Преобразует рекордный счет в графическое изображение"""
         high_score = round(self.stats.high_score, -1)
         high_score_str = "{:,}".format(high_score)
+        high_score_str = f"Best score: {high_score_str}"
         self.high_score_image = self.font.render(high_score_str, True, self.text_color, self.settings.bg_color)
 
         # Рекорд выравнивается по центру верхней стороны
@@ -54,7 +56,7 @@ class Scoreboard():
 
     def prep_level(self):
         """Преобразует уровень в графическое изображение"""
-        level_str = str(self.stats.level)
+        level_str = f"Level: {str(self.stats.level)}"
         self.level_image = self.font.render(level_str, True, self.text_color, self.settings.bg_color)
 
         # Уровень находится под текущим счетом
