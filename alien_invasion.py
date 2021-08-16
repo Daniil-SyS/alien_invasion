@@ -162,9 +162,10 @@ class AlienInvasion:
         # Удаление снярядов и прешельцев, учавствующих в колизиях
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
-        # При обнаружении коллизии(попадании в прешельца снаряда) увеличивается счет
+        # При обнаружении коллизии(попадании в прешельца снаряда) увеличивается счет за каждого прешельца
         if collisions:
-            self.stats.score += self.settings.aliens_points
+            for alliens in collisions.values():
+                self.stats.score += self.settings.aliens_points * len(alliens)
             self.sb.prep_score()
 
         if not self.aliens:
