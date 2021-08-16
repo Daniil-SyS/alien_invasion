@@ -58,6 +58,7 @@ class AlienInvasion:
         """Отслеживание событий клавиатуры и мыши"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.stats.save_best_result()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -132,6 +133,7 @@ class AlienInvasion:
         elif event.key == pygame.K_p and not self.stats.game_active:
             self.start_game()
         elif event.key == pygame.K_q:
+            self.stats.save_best_result()
             sys.exit()
 
     def _check_keyup_events(self, event):
