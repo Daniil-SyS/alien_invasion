@@ -68,60 +68,6 @@ class AlienInvasion:
                 mouse_get = pygame.mouse.get_pos()
                 self._check_click_button(mouse_get)
 
-    def _check_click_button(self, mouse_get):
-        """Обработка событий при нажатии на кнопку"""
-        # Запускает игру
-        if self.buttons[0].rect.collidepoint(mouse_get)  and not self.stats.game_active:
-            self.start_game()
-        # Выставляет уровни сложности
-        elif self.buttons[1].rect.collidepoint(mouse_get)  and not self.stats.game_active:
-            self.settings.speedup_scale = 1.1
-        elif self.buttons[2].rect.collidepoint(mouse_get)  and not self.stats.game_active:
-            self.settings.speedup_scale = 1.2
-        elif self.buttons[3].rect.collidepoint(mouse_get)  and not self.stats.game_active:
-            self.settings.speedup_scale = 1.3
-
-    def start_game(self):
-        """Задает исходный сценарий при запуске игры"""
-        # Сброс игровой статистики
-        self.stats.reset_stats()
-        self.stats.game_active = True
-        self.sb.prep_score()
-        self.sb.prep_level()
-        self.sb.prep_ships()
-
-        # Очистка списков с прешельцами и снарядами
-        self.aliens.empty()
-        self.bullets.empty()
-
-        # Создание нового флота и размещение корабля на исходной позиции
-        self._create_fleet()
-        self.ship.center_ship()
-
-        # Сброс игровых настроек
-        self.settings.initialize_dynamic_settings()
-
-        # Указатель мыши скрывается
-        pygame.mouse.set_visible(False)
-
-    def buttons_level(self):
-        """Создает кнопки для игрового меню"""
-        button_play = Button(self, "Play", self.screen.get_rect().center)
-        self.buttons.append(button_play)
-
-        # Размещается чуть ниже предыдущей кнопки на расстоянии высоты кнопки
-        position_button_easy = (button_play.rect.centerx, button_play.rect.y + button_play.rect.height * 2)
-        button_easy = Button(self, "Easy", position_button_easy)
-        self.buttons.append(button_easy)
-
-        position_button_middle = (button_easy.rect.centerx, button_easy.rect.y + button_easy.rect.height * 2)
-        button_middle = Button(self, "Middle", position_button_middle)
-        self.buttons.append(button_middle)
-
-        position_button_hard = (button_middle.rect.centerx, button_middle.rect.y + button_middle.rect.height * 2)
-        button_hard = Button(self, "Hard", position_button_hard)
-        self.buttons.append(button_hard)
-
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш"""
         if event.key == pygame.K_RIGHT:
@@ -143,11 +89,90 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
 
+    def buttons_level(self):
+        """Создает кнопки для игрового меню"""
+        button_play = Button(self, "Play", self.screen.get_rect().center)
+        self.buttons.append(button_play)
+
+        # Размещается чуть ниже предыдущей кнопки на расстоянии высоты кнопки
+        position_button_easy = (button_play.rect.centerx, button_play.rect.y + button_play.rect.height * 2)
+        button_easy = Button(self, "Easy", position_button_easy)
+        self.buttons.append(button_easy)
+
+        position_button_middle = (button_easy.rect.centerx, button_easy.rect.y + button_easy.rect.height * 2)
+        button_middle = Button(self, "Medium", position_button_middle)
+        self.buttons.append(button_middle)
+
+        position_button_hard = (button_middle.rect.centerx, button_middle.rect.y + button_middle.rect.height * 2)
+        button_hard = Button(self, "Hard", position_button_hard)
+        self.buttons.append(button_hard)
+
+    def _check_click_button(self, mouse_get):
+        """Обработка событий при нажатии на кнопку"""
+        # Запускает игру
+        if self.buttons[0].rect.collidepoint(mouse_get) and not self.stats.game_active:
+            self.start_game()
+        # Выставляет уровни сложности
+        elif self.buttons[1].rect.collidepoint(mouse_get) and not self.stats.game_active:
+            self.settings.speedup_scale = 1.1
+        elif self.buttons[2].rect.collidepoint(mouse_get) and not self.stats.game_active:
+            self.settings.speedup_scale = 1.2
+        elif self.buttons[3].rect.collidepoint(mouse_get) and not self.stats.game_active:
+            self.settings.speedup_scale = 1.3
+
+    def start_game(self):
+        """Задает исходный сценарий при запуске игры"""
+        # Сброс игровой статистики
+        self.stats.reset_stats()
+        self.stats.game_active = True
+        self.sb.prep_images()
+
+        # Очистка списков с прешельцами и снарядами
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Создание нового флота и размещение корабля на исходной позиции
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Сброс игровых настроек
+        self.settings.initialize_dynamic_settings()
+
+        # Указатель мыши скрывается
+        pygame.mouse.set_visible(False)
+
     def _fire_bullet(self):
         """Создание нового сняряда и включение его в группу bullets"""
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+
+    def _create_fleet(self):
+        """Создание флота прешельцев"""
+        # Создание  прешельца и вычисление количества пришельцов в ряду
+        # Интервал между пришельцами равено одному прешельцу
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        number_aliens_y = available_space_y // (2 * alien_height)
+
+        # Создание первого ряда прешелцев
+        for alien_row_number in range(number_aliens_y):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number, alien_row_number)
+
+    def _create_alien(self, alien_number, alien_row_number):
+        """Создание прешельца и размещение его в ряду"""
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * alien_row_number
+        self.aliens.add(alien)
 
     def _update_bullets(self):
         """Обновление позиций снарядов и удаление старых"""
@@ -160,28 +185,6 @@ class AlienInvasion:
                 self.bullets.remove(bullet)
 
         self._check_bullet_alien_collisions()
-
-    def _check_bullet_alien_collisions(self):
-        """Обработка коллизий снарядов и пришельцев"""
-        # Удаление снярядов и прешельцев, учавствующих в колизиях
-        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-
-        # При обнаружении коллизии(попадании в прешельца снаряда) увеличивается счет за каждого прешельца
-        if collisions:
-            for alliens in collisions.values():
-                self.stats.score += self.settings.aliens_points * len(alliens)
-            self.sb.prep_score()
-            self.sb.check_high_score()
-
-        if not self.aliens:
-            # Удаляет все снаряды и создает новый флот прешельцев
-            self.bullets.empty()
-            self._create_fleet()
-            self.settings.increase_speed()
-
-            # Повышаем уровень
-            self.stats.level += 1
-            self.sb.prep_level()
 
     def _update_aliens(self):
         """
@@ -197,6 +200,31 @@ class AlienInvasion:
 
         # Проверить добрались ли пришельцы до нижней части экрана
         self._check_aliens_bottom()
+
+    def _check_bullet_alien_collisions(self):
+        """Обработка коллизий снарядов и пришельцев"""
+        # Удаление снярядов и прешельцев, учавствующих в колизиях
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        # При обнаружении коллизии(попадании в прешельца снаряда) увеличивается счет за каждого прешельца
+        if collisions:
+            for alliens in collisions.values():
+                self.stats.score += self.settings.aliens_points * len(alliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
+        if not self.aliens:
+            self._start_new_level()
+
+    def _start_new_level(self):
+        """Переход на следующий уровень сложности"""
+        # Удаляет все снаряды и создает новый флот прешельцев
+        self.bullets.empty()
+        self._create_fleet()
+        self.settings.increase_speed()
+        # Повышаем уровень
+        self.stats.level += 1
+        self.sb.prep_level()
 
     def _check_aliens_bottom(self):
         """Проверяет добрались ли пришельцы до нижнего края экрана"""
@@ -229,33 +257,6 @@ class AlienInvasion:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
 
-    def _create_fleet(self):
-        """Создание флота прешельцев"""
-        # Создание  прешельца и вычисление количества пришельцов в ряду
-        # Интервал между пришельцами равено одному прешельцу
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        available_space_x = self.settings.screen_width - (2 * alien_width)
-        number_aliens_x = available_space_x // (2 * alien_width)
-
-        ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
-        number_aliens_y = available_space_y // (2 * alien_height)
-
-        # Создание первого ряда прешелцев
-        for alien_row_number in range(number_aliens_y):
-            for alien_number in range(number_aliens_x):
-                self._create_alien(alien_number, alien_row_number)
-
-    def _create_alien(self, alien_number, alien_row_number):
-        """Создание прешельца и размещение его в ряду"""
-        alien = Alien(self)
-        alien_width = alien.rect.width
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * alien_row_number
-        self.aliens.add(alien)
-
     def _check_fleet_edges(self):
         """Реагирует на достижение пришельцами конца экрана"""
         for alien in self.aliens.sprites():
@@ -282,7 +283,7 @@ class AlienInvasion:
         # Вывод информации о счете
         self.sb.show_score()
 
-        # Кнопка Play отображается в том случае если игра - не активна
+        # Кнопки отображаются в том случае если игра - не активна
         if not self.stats.game_active:
             for button in self.buttons:
                 button.draw_button()
