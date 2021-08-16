@@ -27,8 +27,13 @@ class GameStats():
 
     def load_best_result(self) -> None:
         """Загружает лучший результат из файла"""
-        with open("records/best_result.txt") as file_text:
-            for record in file_text:
-                self.high_score = int(record)
+        try:
+            with open("records/best_result.txt") as file_text:
+                for record in file_text:
+                    self.high_score = int(record)
+        # Если файл не найден, то рекорд равено нулю
+        except FileNotFoundError:
+            self.high_score = 0
+
 
 
