@@ -1,3 +1,5 @@
+import os
+
 class GameStats():
     """Отслеживание статистики для игры Alien Invasion"""
 
@@ -22,6 +24,9 @@ class GameStats():
 
     def save_best_result(self) -> None:
         """Сохраняет лучший результат в текстовом файле в папке игры"""
+        # Проверка наличия каталога records
+        self._check_directory_records()
+
         with open("records/best_result.txt", 'w') as file_text:
             print(self.high_score, file=file_text)
 
@@ -34,6 +39,18 @@ class GameStats():
         # Если файл не найден, то рекорд равено нулю
         except FileNotFoundError:
             self.high_score = 0
+
+    def _check_directory_records(self):
+        """Проверяет наличие каталога records"""
+        # При его отсутсвии создать
+        try:
+            if not os.path.exists('records'):
+                os.mkdir(f"{str(os.getcwd())}/records")
+                print(f"{str(os.getcwd())}/records")
+        except OSError:
+            print("Создать директорию records не удалось")
+
+
 
 
 
